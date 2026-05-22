@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M3 G2 – Costruisci il Piano di Informazione</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#0a1628,#0d2137,#0f3460);min-height:100vh;overflow:hidden;display:flex;justify-content:center;align-items:center}
+.container{background:#fff;width:800px;height:550px;display:flex;flex-direction:column;border-radius:10px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.header{background:linear-gradient(135deg,#0a1628,#0f3460);color:#fff;padding:11px 18px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+.header h1{font-size:15px;font-weight:700}.header p{font-size:11px;opacity:.8;margin-top:1px}
+button{padding:7px 13px;border:none;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;transition:all .2s}
+.btn-white{background:#fff;color:#0f3460}.btn-white:hover{background:#e8eaf6}
+.btn-outline{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.4)}.btn-outline:hover{background:rgba(255,255,255,.25)}
+.btn-group{display:flex;gap:8px}
+.content{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.hidden{display:none!important}
+
+.instr{padding:18px 24px;overflow-y:auto;flex:1}
+.instr h2{color:#0f3460;font-size:16px;margin-bottom:10px}
+.instr p,.instr li{font-size:13px;line-height:1.6;color:#444;margin-bottom:5px}
+.instr ul{margin-left:18px;margin-bottom:10px}
+.note-box{background:#e8eaf6;border-left:4px solid #0f3460;border-radius:7px;padding:10px 13px;font-size:12px;color:#0f3460;margin:8px 0;line-height:1.5}
+.start-btn{background:linear-gradient(135deg,#0a1628,#0f3460);color:#fff;padding:11px 32px;font-size:14px;border-radius:8px;display:block;margin:14px auto 0}
+.start-btn:hover{transform:translateY(-2px)}
+
+.game-wrap{flex:1;display:flex;flex-direction:column;overflow:hidden;padding:10px 14px;gap:8px}
+.phase-hdr{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.phase-badge{background:#0f3460;color:#fff;border-radius:20px;padding:3px 12px;font-size:11px;font-weight:700}
+.phase-title{font-size:13px;font-weight:700;color:#0f3460}
+.score-r{margin-left:auto;font-size:12px;color:#666}
+
+.game-body{flex:1;display:flex;gap:12px;overflow:hidden;min-height:0}
+.pool-col{width:220px;display:flex;flex-direction:column;flex-shrink:0}
+.pool-col h3,.seq-col h3{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#555;margin-bottom:7px;flex-shrink:0}
+.pool-inner{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:5px}
+.step-card{background:#fff;border:2px solid #9fa8da;border-radius:7px;padding:9px 11px;cursor:grab;font-size:11px;font-weight:600;color:#333;line-height:1.35;transition:all .2s;user-select:none}
+.step-card:hover{border-color:#0f3460;transform:translateX(3px);box-shadow:0 2px 8px rgba(0,0,0,.1)}
+.step-card.placed{opacity:.25;pointer-events:none}
+
+.seq-col{flex:1;display:flex;flex-direction:column;min-height:0}
+.slots-inner{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:5px}
+.slot-row{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.slot-num{width:26px;height:26px;background:#0f3460;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.slot-zone{flex:1;border:2px dashed #c5cae9;border-radius:7px;min-height:42px;display:flex;align-items:center;padding:5px 9px;font-size:11px;color:#aaa;transition:all .2s}
+.slot-zone.over{border-color:#0f3460;background:#e8eaf6}
+.slot-zone.filled{border-style:solid;border-color:#0f3460;background:#e8eaf6;color:#0f3460;font-weight:600}
+.slot-zone.correct-s{border-color:#2e7d32;background:#e8f5e9;color:#1b5e20}
+.slot-zone.wrong-s{border-color:#c62828;background:#ffebee;color:#7f0000}
+.slot-content{display:flex;align-items:center;justify-content:space-between;width:100%;gap:4px}
+.slot-text{font-size:11px;font-weight:600;flex:1;line-height:1.3}
+.rm-btn{background:#9e9e9e;color:#fff;border:none;border-radius:50%;width:16px;height:16px;font-size:9px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:0}
+
+.bottom-row{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.att-lbl{font-size:12px;color:#555}
+.check-btn{background:linear-gradient(135deg,#0a1628,#0f3460);color:#fff;padding:9px 22px;font-size:13px;border-radius:8px;margin-left:auto}
+.check-btn:disabled{background:#ccc;cursor:not-allowed}
+
+.fb-page{flex:1;display:flex;align-items:center;justify-content:center;padding:20px}
+.fb-box{text-align:center;max-width:500px}
+.fb-icon{font-size:55px;margin-bottom:12px}
+.fb-box h2{font-size:22px;font-weight:700;color:#0f3460;margin-bottom:8px}
+.fb-box p{font-size:13px;color:#555;line-height:1.6;margin-bottom:15px}
+.fb-score{background:#e8eaf6;border-radius:10px;padding:10px 20px;font-size:15px;font-weight:700;color:#0f3460;margin-bottom:15px;display:inline-block}
+.fb-btns{display:flex;gap:10px;justify-content:center}
+.btn-prim{background:linear-gradient(135deg,#0a1628,#0f3460);color:#fff;padding:10px 24px;font-size:13px;border-radius:8px}
+.btn-sec{background:#78909c;color:#fff;padding:10px 24px;font-size:13px;border-radius:8px}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div>
+      <h1>Costruisci il Piano di Informazione e Campagna Sicurezza</h1>
+      <p>Modulo 3 DL · Sezioni 2.1–2.6 – Obblighi Art. 36, Campagne, Partecipazione</p>
+    </div>
+    <div class="btn-group">
+      <button class="btn-outline" onclick="resetGame()">🔄 Ricomincia</button>
+      <button class="btn-white" onclick="window.close()">✕ Esci</button>
+    </div>
+  </div>
+  <div class="content">
+    <div id="instrPage" class="instr">
+      <h2>🎯 Obiettivo</h2>
+      <p>Una campagna per la sicurezza efficace segue una sequenza logica precisa. Le fasi non sono intercambiabili: saltarne una o invertirne l'ordine compromette l'efficacia dell'intero piano. Riordina le 9 fasi nell'ordine corretto.</p>
+      <div class="note-box">📌 <b>Art. 36 D.Lgs. 81/08:</b> l'informazione deve precedere l'esposizione al rischio, essere comprensibile, adeguata al ruolo e aggiornata. Non è sufficiente che l'informazione venga trasmessa: deve essere verificata nella sua comprensione ed efficacia.</div>
+      <ul>
+        <li>Trascina le fasi dalla colonna sinistra negli slot numerati</li>
+        <li>Puoi rimuovere e riposizionare prima di verificare</li>
+        <li>L'ordine riflette sia la logica normativa che quella organizzativa</li>
+      </ul>
+      <button class="start-btn" onclick="startGame()">▶ Inizia</button>
+    </div>
+
+    <div id="gamePage" class="game-wrap hidden">
+      <div class="phase-hdr">
+        <span class="phase-badge">Ordina le Fasi</span>
+        <span class="phase-title">Piano di Informazione e Campagna Sicurezza</span>
+        <span class="score-r">Tentativi: <b id="attCount">0</b></span>
+      </div>
+      <div class="game-body">
+        <div class="pool-col">
+          <h3>Fasi disponibili</h3>
+          <div class="pool-inner" id="poolInner"></div>
+        </div>
+        <div class="seq-col">
+          <h3>Sequenza corretta (dalla prima all'ultima)</h3>
+          <div class="slots-inner" id="slotsInner"></div>
+        </div>
+      </div>
+      <div class="bottom-row">
+        <span class="att-lbl">Posizionate: <b id="placedCount">0</b>/9</span>
+        <button class="check-btn" id="checkBtn" onclick="checkSeq()" disabled>Verifica Sequenza ✓</button>
+      </div>
+    </div>
+
+    <div id="fbPage" class="fb-page hidden">
+      <div class="fb-box">
+        <div class="fb-icon">📋</div>
+        <h2>Piano Completato!</h2>
+        <p>La sequenza corretta garantisce che ogni fase si costruisca sulla precedente. L'analisi dei bisogni prima dell'azione, la verifica dell'efficacia dopo, e il coinvolgimento dell'RLS come snodo partecipativo sono i tre cardini di un piano normativo ed efficace.</p>
+        <div class="fb-score" id="fbScore">–</div>
+        <div class="fb-btns">
+          <button class="btn-prim" onclick="resetGame()">🔄 Rigioca</button>
+          <button class="btn-sec" onclick="window.close()">Esci</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+const CORRECT=[
+  "Analisi dei bisogni informativi per ruolo e mansione (mappatura rischi specifici per destinatario)",
+  "Consultazione preventiva dell'RLS sui contenuti e sulle modalità informative previste",
+  "Definizione degli obiettivi misurabili della campagna (es. tasso segnalazione, compliance DPI)",
+  "Progettazione dei contenuti: adeguatezza linguistica, livello di dettaglio, supporti visivi",
+  "Scelta dei canali e dei momenti: briefing, affissione, intranet, riunioni di reparto",
+  "Erogazione dell'informazione con registrazione documentale della partecipazione",
+  "Verifica immediata della comprensione tramite feedback diretto o questionario a caldo",
+  "Monitoraggio degli indicatori nel tempo: variazione comportamenti, near miss, infortuni",
+  "Aggiornamento del piano informativo sulla base dei risultati misurati e dei cambiamenti organizzativi"
+];
+
+let seqState=Array(9).fill(null), dragged=null, attempts=0;
+
+function startGame(){
+  seqState=Array(9).fill(null); attempts=0;
+  document.getElementById('attCount').textContent='0';
+  document.getElementById('placedCount').textContent='0';
+  renderPool(); renderSlots();
+  document.getElementById('checkBtn').disabled=true;
+  showPage('gamePage');
+}
+
+function renderPool(){
+  const pool=document.getElementById('poolInner'); pool.innerHTML='';
+  [...CORRECT].sort(()=>Math.random()-.5).forEach((step,i)=>{
+    if(seqState.includes(step)) return;
+    const d=document.createElement('div'); d.className='step-card'; d.textContent=step; d.draggable=true;
+    d.ondragstart=e=>{dragged=step;e.dataTransfer.effectAllowed='move';};
+    pool.appendChild(d);
+  });
+}
+
+function renderSlots(){
+  const cont=document.getElementById('slotsInner'); cont.innerHTML='';
+  for(let i=0;i<9;i++){
+    const row=document.createElement('div'); row.className='slot-row';
+    const num=document.createElement('div'); num.className='slot-num'; num.textContent=i+1;
+    const zone=document.createElement('div'); zone.className='slot-zone'; zone.dataset.slot=i;
+    if(seqState[i]!==null){
+      zone.classList.add('filled');
+      const sc=document.createElement('div'); sc.className='slot-content';
+      const st=document.createElement('span'); st.className='slot-text'; st.textContent=seqState[i];
+      const rm=document.createElement('button'); rm.className='rm-btn'; rm.textContent='×';
+      rm.onclick=()=>{seqState[i]=null;renderPool();renderSlots();updateCount();};
+      sc.appendChild(st); sc.appendChild(rm); zone.appendChild(sc);
+    } else {
+      zone.textContent='Fase '+(i+1);
+      zone.ondragover=e=>{e.preventDefault();zone.classList.add('over');};
+      zone.ondragleave=()=>zone.classList.remove('over');
+      zone.ondrop=e=>dropSlot(e,i,zone);
+    }
+    row.appendChild(num); row.appendChild(zone);
+    cont.appendChild(row);
+  }
+}
+
+function dropSlot(e,i,zone){
+  e.preventDefault(); zone.classList.remove('over');
+  if(!dragged||seqState[i]!==null||seqState.includes(dragged)) return;
+  seqState[i]=dragged; dragged=null;
+  renderPool(); renderSlots(); updateCount();
+}
+
+function updateCount(){
+  const n=seqState.filter(v=>v!==null).length;
+  document.getElementById('placedCount').textContent=n;
+  document.getElementById('checkBtn').disabled=n<9;
+}
+
+function checkSeq(){
+  attempts++;
+  document.getElementById('attCount').textContent=attempts;
+  let allOk=true;
+  document.querySelectorAll('.slot-zone').forEach((z,i)=>{
+    z.classList.remove('correct-s','wrong-s');
+    if(seqState[i]===CORRECT[i]) z.classList.add('correct-s');
+    else{z.classList.add('wrong-s');allOk=false;}
+  });
+  if(allOk){
+    document.getElementById('fbScore').textContent='Completato in '+attempts+(attempts===1?' tentativo':' tentativi');
+    setTimeout(()=>showPage('fbPage'),800);
+  }
+}
+
+function resetGame(){showPage('instrPage');}
+function showPage(id){['instrPage','gamePage','fbPage'].forEach(p=>document.getElementById(p).classList.add('hidden'));document.getElementById(id).classList.remove('hidden');}
+</script>
+</body>
+</html>
